@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Drag;
+use App\Models\Vendor;
 use Exception;
 use Illuminate\Http\Request;
 
@@ -117,4 +118,27 @@ class DragController extends Controller
             ], 500);
         }
     }
+    public function search(Request $request)
+    {
+        try {
+            $request->validate([
+                'searchString' => 'required|string|max:255',
+            ]);
+
+            $keyword = $request->input('searchString');
+
+            $drags = Drag::where('name', 'like', "%{$keyword}%")->with('vendor')->get();
+
+            return response()->json([
+                'message' => 'Search results fetched successfully',
+                'data'    => $drags
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => 'Search failed',
+                'error'   => $e->getMessage()
+            ], 500);
+        }
+    }
+
 }

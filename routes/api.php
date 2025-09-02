@@ -22,4 +22,6 @@ Route::middleware('auth:api')->group(function () {
 
     Route::apiResource('vendors', VendorController::class);
     Route::apiResource('drags', DragController::class);
+    Route::post('drags/search', [DragController::class, 'search']);
+
 });
